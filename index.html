@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Arceus Booking</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Oxanium:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="page-loader" id="pageLoader">
+    <div class="loader-ring"></div>
+    <p>Arceus Booking Loading...</p>
+  </div>
+
+  <div class="hero-bg">
+    <div class="gradient-overlay"></div>
+    <div class="particle particle-1"></div>
+    <div class="particle particle-2"></div>
+    <div class="particle particle-3"></div>
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+    <div class="glow-orb orb-3"></div>
+  </div>
+
+  <main class="layout" id="mainContent">
+    <header class="topbar">
+      <div class="brand-block">
+        <span class="brand-tag">ARCEUS</span>
+        <h1>Booking</h1>
+      </div>
+      <nav class="top-actions">
+        <button class="ghost-btn" data-scroll="bookingSection">Book Now</button>
+        <button class="ghost-btn" data-scroll="statusSection">Track Status</button>
+      </nav>
+    </header>
+
+    <section class="intro-card glass-card">
+      <div class="intro-copy">
+        <p class="eyebrow">Luxury Booking System</p>
+        <h2>Arceus Booking</h2>
+        <p>Premium task booking for Map Review with glassmorphic luxury UI, animated interactions, and secure local storage.</p>
+      </div>
+      <div class="intro-stats">
+        <div class="stat-item">
+          <span>Total tasks</span>
+          <strong id="statTotal">0</strong>
+        </div>
+        <div class="stat-item">
+          <span>Active orders</span>
+          <strong id="statActive">0</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="booking-section" id="bookingSection">
+      <div class="section-header">
+        <span class="section-tag">Secure Booking</span>
+        <h2>Book a premium review task</h2>
+      </div>
+
+      <article class="booking-panel glass-card floating-card">
+        <div class="booking-header">
+          <h3>Task Booking Form</h3>
+          <p>Minimum quantity 5, maximum 10. Telegram ID must start with @.</p>
+        </div>
+        <form id="bookingForm" class="form-grid" novalidate>
+          <label>
+            User Name
+            <input type="text" id="userName" placeholder="Enter your name" required />
+            <span class="error-message" data-error-for="userName"></span>
+          </label>
+          <label>
+            Telegram Name
+            <input type="text" id="telegramName" placeholder="Enter Telegram name" required />
+            <span class="error-message" data-error-for="telegramName"></span>
+          </label>
+          <label>
+            Telegram ID
+            <input type="text" id="telegramId" placeholder="@example" required />
+            <span class="error-message" data-error-for="telegramId"></span>
+          </label>
+          <label>
+            Task Type
+            <select id="taskType" required>
+              <option value="">Select task</option>
+              <option value="Map Review">Map Review</option>
+            </select>
+            <span class="error-message" data-error-for="taskType"></span>
+          </label>
+          <label>
+            Package
+            <select id="packageType" required>
+              <option value="">Choose package</option>
+              <option value="Easy">Easy — ₹5</option>
+              <option value="Beginner">Beginner — ₹6</option>
+            </select>
+            <span class="error-message" data-error-for="packageType"></span>
+          </label>
+          <label>
+            Quantity
+            <input type="number" id="quantity" min="5" max="10" placeholder="5" required />
+            <span class="error-message" data-error-for="quantity"></span>
+          </label>
+          <div class="form-actions">
+            <button type="submit" id="submitBtn" class="primary-btn">Submit Booking</button>
+            <button type="reset" class="secondary-btn">Reset</button>
+          </div>
+          <div class="cooldown-panel hidden" id="cooldownPanel">
+            <p class="cooldown-title">You already have an active booking.</p>
+            <p>Please wait</p>
+            <div class="countdown" id="cooldownTimer">00:00:00</div>
+          </div>
+        </form>
+      </article>
+    </section>
+
+    <section class="status-section" id="statusSection">
+      <div class="section-header">
+        <span class="section-tag">Instant Status</span>
+        <h2>Check your booking status</h2>
+      </div>
+      <article class="status-panel glass-card floating-card">
+        <form id="statusForm" class="status-form">
+          <label>
+            Task ID
+            <input type="text" id="statusTaskId" placeholder="ARCEUS001" required />
+            <span class="error-message" data-error-for="statusTaskId"></span>
+          </label>
+          <button type="submit" class="primary-btn">Check Status</button>
+        </form>
+        <div id="statusResult" class="status-result"></div>
+      </article>
+    </section>
+  </main>
+
+  <div class="modal-overlay hidden" id="successOverlay">
+    <div class="success-modal glass-card animated-card">
+      <div class="success-badge">Success</div>
+      <div class="success-icon">✓</div>
+      <h3>Booking Confirmed</h3>
+      <p>Your task has been created successfully.</p>
+      <div class="success-details">
+        <div><span>Task ID</span><strong id="successTaskId"></strong></div>
+        <div><span>Date & Time</span><strong id="successDateTime"></strong></div>
+      </div>
+      <div class="success-actions">
+        <button class="secondary-btn" id="copyTaskBtn">Copy Task ID</button>
+        <button class="ghost-btn" id="closeSuccessBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay hidden" id="adminLoginOverlay">
+    <div class="auth-modal glass-card animated-card">
+      <h3>Admin Login</h3>
+      <form id="adminLoginForm" class="auth-form">
+        <label>
+          Username
+          <input type="text" id="adminUser" autocomplete="username" required />
+        </label>
+        <label>
+          Password
+          <input type="password" id="adminPass" autocomplete="current-password" required />
+        </label>
+        <button type="submit" class="primary-btn">Enter Dashboard</button>
+      </form>
+      <div class="auth-note">Press TAB 9 times to open this panel.</div>
+    </div>
+  </div>
+
+  <div class="panel-overlay hidden" id="adminPanel">
+    <div class="admin-shell glass-card animated-card">
+      <header class="admin-header">
+        <div>
+          <span class="section-tag">Admin Dashboard</span>
+          <h2>Arceus Control Center</h2>
+        </div>
+        <button class="ghost-btn" id="closeAdminBtn">Close</button>
+      </header>
+      <div class="admin-summary" id="adminSummary"></div>
+      <div class="admin-search">
+        <input type="text" id="adminSearchInput" placeholder="Search by Task ID, Telegram ID, or User Name" />
+        <button class="primary-btn" id="exportCsvBtn">Export CSV</button>
+      </div>
+      <div class="admin-cards" id="adminCards"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
